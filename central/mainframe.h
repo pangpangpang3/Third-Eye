@@ -13,6 +13,7 @@
 #include <QUrl>
 
 #include "common/constants.h"
+#include "imagewidget.h"
 // MainFrame is the widgets contains the image body,and sideWidget with thumbnails
 
 class MainFrame : public QFrame
@@ -25,20 +26,17 @@ public:
 public slots:
     void setSelectedImage(QString fileUrl);
 protected:
-    void paintEvent(QPaintEvent *);
     void resizeEvent(QResizeEvent *e);
 private:
     void initUi();
     void initConnection();
     void initData();
 
-    QLabel* m_imageLabel;
-    QString m_url = "";
-    //The main pixmap
-    QPixmap* m_pix = NULL;
+    ImageWidget* m_imageWidget;
     QHBoxLayout* m_imageHLayout;
     QVBoxLayout* m_imageVLayout;
-    //The main pixmap size
+//    QLabel* m_imageLabel;
+    QString m_url = "";
 
     //The right size image
     QListWidget* m_thumbnailWidget;

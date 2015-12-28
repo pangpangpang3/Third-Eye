@@ -14,8 +14,10 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    central/mainframe.cpp
+    central/mainframe.cpp \
+    central/imagewidget.cpp
 
 HEADERS  += mainwindow.h \
     central/mainframe.h \
     common/constants.h \
+    central/imagewidget.h
