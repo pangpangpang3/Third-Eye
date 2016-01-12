@@ -11,7 +11,7 @@ ImageWidget::ImageWidget(QWidget *parent)
 
 void ImageWidget::initUI() {
     m_imageLabel = new QLabel(this);
-    m_imageLabel->setStyleSheet("background-color: rgba(255, 205, 170, 100);");
+    m_imageLabel->setStyleSheet("background-color: rgba(255, 255, 255, 0);");
     m_imageLabel->setFixedSize(150, 150);
 
     m_hLayout = new QHBoxLayout;
