@@ -19,6 +19,8 @@ void MainFrame::initUi(){
     m_thumbnailWidget->setStyleSheet("background-color: rgba(216, 191, 216, 255);");
     m_thumbnailWidget->setFixedWidth(COMMONVIEW::RIGHT_SIZEBAR_WIDTH);
 
+//    this->setFixedSize(m_imageWidget->width()+m_thumbnailWidget->width(), m_imageWidget->height()+52);
+
     m_Layout = new QHBoxLayout(this);
     m_Layout->setMargin(0);
     m_Layout->setSpacing(0);
@@ -28,6 +30,7 @@ void MainFrame::initUi(){
     m_Layout->addWidget(m_thumbnailWidget);
 
     setLayout(m_Layout);
+
 
     qDebug() << "MainFrame size:" << m_imageWidget->size();
 }
