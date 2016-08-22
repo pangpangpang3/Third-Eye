@@ -2,6 +2,9 @@
 
 #include "imagewidget.h"
 
+const int IMAGE_MIN_WIDTH = 2;
+const int IMAGE_MIN_HEIGHT = 2;
+
 ImageWidget::ImageWidget(QWidget *parent)
     : QWidget(parent)
 {
@@ -10,6 +13,7 @@ ImageWidget::ImageWidget(QWidget *parent)
 }
 
 void ImageWidget::initUI() {
+    setStyleSheet("background:red;");
     m_imageLabel = new QLabel(this);
     m_imageLabel->setStyleSheet("background-color: rgba(255, 255, 255, 0);");
     m_imageLabel->setMinimumSize(640, 480);
@@ -33,11 +37,11 @@ void ImageWidget::initConnect() {
 
 void ImageWidget::paintEvent(QPaintEvent *) {
 
+    qDebug() << "m_pix paintEvent:" << m_pix.size();
 
-    qDebug() << "m_pix size:" << m_pix.size();
     m_imageLabel->setMinimumSize(m_pix.size());
     m_imageLabel->sizeHint();
-    qDebug() << m_imageLabel->size() << this->size();
+    qDebug() << m_imageLabel->size();
     QPainter painter(this);
     painter.setRenderHints(QPainter::Antialiasing|QPainter::SmoothPixmapTransform);
     if (m_pix.isNull()) {
@@ -50,15 +54,45 @@ void ImageWidget::paintEvent(QPaintEvent *) {
 }
 
 void ImageWidget::setImage(QString url) {
+    if (url.isEmpty())
+        return;
     m_imageUrl = url;
     m_pix.load(m_imageUrl);
+    qreal imgOriginWidth = m_pix.width();
+    qreal imgOriginHeight = m_pix.height();
+
     QSize defaultSize = QSize(640, 480);
     m_pix = m_pix.scaled(defaultSize, Qt::KeepAspectRatio);
-    qDebug() << "m_pix:" << m_pix.size();
+    qreal imgScaledWidth = m_pix.width();
+    qreal imgScaledHeight = m_pix.height();
+
+    m_scaleWidth = imgScaledWidth/imgOriginWidth;
+    m_scaleHeight = imgScaledHeight/imgOriginHeight;
+
+    update();
+}
+
+void ImageWidget::wheelEvent(QWheelEvent *e) {
+    //scale value be smaller
+    QSize originSize = m_pix.size();
+    if (e->angleDelta().y()<0) {
+        if (qMin(originSize.width(), originSize.height()) >= 15) {
+            originSize = QSize(originSize.width() - 5, originSize.height() - 5);
+            m_pix = m_pix.scaled(originSize, Qt::KeepAspectRatio);
+        }
+    } else {
+        if (qMin(originSize.width(), originSize.height()) >= 15) {
+            originSize = QSize(originSize.width() + 5, originSize.height() + 5);
+            m_pix = m_pix.scaled(originSize, Qt::KeepAspectRatio);
+        }
+    }
+
+    qDebug() << "m_pix wheelEvent:" << m_pix.size();
     update();
 }
 
 void ImageWidget::resizeEvent(QResizeEvent *) {
+
     this->sizeHint();
     this->updateGeometry();
 }

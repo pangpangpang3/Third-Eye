@@ -20,9 +20,15 @@ protected:
 public slots:
     void setImage(QString url);
 
+
+protected:
+    void wheelEvent(QWheelEvent *e);
 private:
     void initUI();
     void initConnect();
+
+    qreal m_scaleWidth;
+    qreal m_scaleHeight;
 
     QLabel* m_imageLabel;
     QString m_imageUrl = "";
