@@ -12,8 +12,7 @@ ImageWidget::ImageWidget(QWidget *parent)
 void ImageWidget::initUI() {
     m_imageLabel = new QLabel(this);
     m_imageLabel->setStyleSheet("background-color: rgba(255, 255, 255, 0);");
-    m_imageLabel->setFixedSize(150, 150);
-
+    m_imageLabel->setMinimumSize(640, 480);
     m_hLayout = new QHBoxLayout;
     m_hLayout->addStretch();
     m_hLayout->addWidget(m_imageLabel);
@@ -34,14 +33,11 @@ void ImageWidget::initConnect() {
 
 void ImageWidget::paintEvent(QPaintEvent *) {
 
-    m_pix.load(m_imageUrl);
 
     qDebug() << "m_pix size:" << m_pix.size();
-    m_imageLabel->setFixedSize(m_pix.width(), m_pix.height());
-    this->setFixedSize(m_pix.width()+2, m_pix.height()+2);
-    qDebug() << "imageWidget size:" << m_imageLabel->size()
-             << "widget size: " << this->size();
-
+    m_imageLabel->setMinimumSize(m_pix.size());
+    m_imageLabel->sizeHint();
+    qDebug() << m_imageLabel->size() << this->size();
     QPainter painter(this);
     painter.setRenderHints(QPainter::Antialiasing|QPainter::SmoothPixmapTransform);
     if (m_pix.isNull()) {
@@ -55,6 +51,10 @@ void ImageWidget::paintEvent(QPaintEvent *) {
 
 void ImageWidget::setImage(QString url) {
     m_imageUrl = url;
+    m_pix.load(m_imageUrl);
+    QSize defaultSize = QSize(640, 480);
+    m_pix = m_pix.scaled(defaultSize, Qt::KeepAspectRatio);
+    qDebug() << "m_pix:" << m_pix.size();
     update();
 }
 

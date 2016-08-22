@@ -11,10 +11,13 @@ MainFrame::MainFrame(QWidget *parent)
 MainFrame::~MainFrame()
 {}
 void MainFrame::initUi(){
+
+    m_imageArea = new QScrollArea(this);
     m_imageWidget = new ImageWidget(this);
 
     this->setStyleSheet("background-color: rgba(205, 170, 125, 255);");
-
+    m_imageArea->setWidget(m_imageWidget);
+    m_imageArea->setMinimumSize(m_imageWidget->size());
     m_thumbnailWidget = new QListWidget(this);
     m_thumbnailWidget->setStyleSheet("background-color: rgba(216, 191, 216, 255);");
     m_thumbnailWidget->setFixedWidth(COMMONVIEW::RIGHT_SIZEBAR_WIDTH);
@@ -25,7 +28,7 @@ void MainFrame::initUi(){
     m_Layout->setMargin(0);
     m_Layout->setSpacing(0);
     m_Layout->addStretch();
-    m_Layout->addWidget(m_imageWidget);
+    m_Layout->addWidget(m_imageArea);
     m_Layout->addStretch();
     m_Layout->addWidget(m_thumbnailWidget);
 

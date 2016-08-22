@@ -11,6 +11,7 @@
 #include <QResizeEvent>
 #include <QPainter>
 #include <QUrl>
+#include <QScrollArea>
 
 #include "common/constants.h"
 #include "imagewidget.h"
@@ -32,6 +33,7 @@ private:
     void initConnection();
     void initData();
 
+    QScrollArea* m_imageArea;
     ImageWidget* m_imageWidget;
     QHBoxLayout* m_imageHLayout;
     QVBoxLayout* m_imageVLayout;

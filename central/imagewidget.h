@@ -19,6 +19,7 @@ protected:
     void resizeEvent(QResizeEvent *);
 public slots:
     void setImage(QString url);
+
 private:
     void initUI();
     void initConnect();

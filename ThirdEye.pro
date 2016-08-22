@@ -20,4 +20,5 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     central/mainframe.h \
     common/constants.h \
-    central/imagewidget.h
+    central/imagewidget.h \
+    central/imagearea.h
