@@ -8,27 +8,15 @@ const int IMAGE_MIN_HEIGHT = 2;
 ImageWidget::ImageWidget(QWidget *parent)
     : QWidget(parent)
 {
+
     initUI();
     initConnect();
 }
 
 void ImageWidget::initUI() {
-    setStyleSheet("background:red;");
+    setFixedSize(640, 480);
+    setStyleSheet("background-color: rgba(255, 0, 0, 100);");
     m_imageLabel = new QLabel(this);
-    m_imageLabel->setStyleSheet("background-color: rgba(255, 255, 255, 0);");
-    m_imageLabel->setMinimumSize(640, 480);
-    m_hLayout = new QHBoxLayout;
-    m_hLayout->addStretch();
-    m_hLayout->addWidget(m_imageLabel);
-    m_hLayout->addStretch();
-
-
-    m_Layout = new QVBoxLayout;
-    m_Layout->addStretch();
-    m_Layout->addLayout(m_hLayout);
-    m_Layout->addStretch();
-
-    setLayout(m_Layout);
 }
 
 void ImageWidget::initConnect() {
@@ -38,17 +26,20 @@ void ImageWidget::initConnect() {
 void ImageWidget::paintEvent(QPaintEvent *) {
 
     qDebug() << "m_pix paintEvent:" << m_pix.size();
-
-    m_imageLabel->setMinimumSize(m_pix.size());
+    m_imageLabel->setMinimumSize(this->rect().size());
     m_imageLabel->sizeHint();
     qDebug() << m_imageLabel->size();
     QPainter painter(this);
-    painter.setRenderHints(QPainter::Antialiasing|QPainter::SmoothPixmapTransform);
+
     if (m_pix.isNull()) {
         qWarning() << "Invalid format of pixmap!";
     } else {
-        QRect imageRect = QRect(m_imageLabel->x(), m_imageLabel->y(), m_imageLabel->width(), m_imageLabel->height());
-        painter.drawPixmap(imageRect, m_pix);
+        QPixmap img = m_pix.scaled(rect().size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        painter.setRenderHints(QPainter::HighQualityAntialiasing|QPainter::SmoothPixmapTransform);
+        if (img.width() < this->width())
+            painter.drawPixmap((width() - img.width()) / 2, 0, img);
+        else
+            painter.drawPixmap(0, 0, img);
         update();
     }
 }
@@ -73,28 +64,25 @@ void ImageWidget::setImage(QString url) {
 }
 
 void ImageWidget::wheelEvent(QWheelEvent *e) {
-    //scale value be smaller
-    QSize originSize = m_pix.size();
+    //scale value be smalle
     if (e->angleDelta().y()<0) {
-        if (qMin(originSize.width(), originSize.height()) >= 15) {
-            originSize = QSize(originSize.width() - 5, originSize.height() - 5);
-            m_pix = m_pix.scaled(originSize, Qt::KeepAspectRatio);
+        if (qMin(this->width(), this->height()) >= 15) {
+            this->setFixedSize(this->width()*0.95, this->height()*0.95);
         }
     } else {
-        if (qMin(originSize.width(), originSize.height()) >= 15) {
-            originSize = QSize(originSize.width() + 5, originSize.height() + 5);
-            m_pix = m_pix.scaled(originSize, Qt::KeepAspectRatio);
+        if (qMin(this->width(), this->height()) >= 15) {
+            this->setFixedSize(this->width()*1.05, this->height()*1.05);
+
         }
     }
 
-    qDebug() << "m_pix wheelEvent:" << m_pix.size();
     update();
 }
 
 void ImageWidget::resizeEvent(QResizeEvent *) {
-
     this->sizeHint();
     this->updateGeometry();
+    emit scaleSize(m_pix.size());
 }
 
 ImageWidget::~ImageWidget()

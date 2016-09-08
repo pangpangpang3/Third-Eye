@@ -14,13 +14,13 @@ class ImageWidget: public QWidget {
 public:
     ImageWidget(QWidget* parent=0);
     ~ImageWidget();
+signals:
+    void scaleSize(QSize scaleSize);
 protected:
     void paintEvent(QPaintEvent *);
     void resizeEvent(QResizeEvent *);
 public slots:
     void setImage(QString url);
-
-
 protected:
     void wheelEvent(QWheelEvent *e);
 private:

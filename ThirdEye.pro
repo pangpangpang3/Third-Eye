@@ -22,3 +22,4 @@ HEADERS  += mainwindow.h \
     common/constants.h \
     central/imagewidget.h \
     central/imagearea.h
+CONFIG +=c++11
