@@ -15,7 +15,7 @@ ImageWidget::ImageWidget(QWidget *parent)
 
 void ImageWidget::initUI() {
     setFixedSize(640, 480);
-    setStyleSheet("background-color: rgba(255, 0, 0, 100);");
+//    setStyleSheet("background-color: rgba(255, 0, 0, 100);");
     m_imageLabel = new QLabel(this);
 }
 
@@ -35,11 +35,10 @@ void ImageWidget::paintEvent(QPaintEvent *) {
         qWarning() << "Invalid format of pixmap!";
     } else {
         QPixmap img = m_pix.scaled(rect().size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        m_img_actual_size = img.size();
         painter.setRenderHints(QPainter::HighQualityAntialiasing|QPainter::SmoothPixmapTransform);
-        if (img.width() < this->width())
-            painter.drawPixmap((width() - img.width()) / 2, 0, img);
-        else
-            painter.drawPixmap(0, 0, img);
+        painter.drawPixmap(0, 0, width(), height(), img);
+
         update();
     }
 }
@@ -49,17 +48,12 @@ void ImageWidget::setImage(QString url) {
         return;
     m_imageUrl = url;
     m_pix.load(m_imageUrl);
-    qreal imgOriginWidth = m_pix.width();
-    qreal imgOriginHeight = m_pix.height();
-
-    QSize defaultSize = QSize(640, 480);
-    m_pix = m_pix.scaled(defaultSize, Qt::KeepAspectRatio);
-    qreal imgScaledWidth = m_pix.width();
-    qreal imgScaledHeight = m_pix.height();
-
-    m_scaleWidth = imgScaledWidth/imgOriginWidth;
-    m_scaleHeight = imgScaledHeight/imgOriginHeight;
-
+    //TODO: process if the image size is too large to display on screen
+    if (m_pix.width() <=0 || m_pix.height() <= 0)
+        return;
+    else {
+        this->setFixedSize(m_pix.width(), m_pix.height());
+    }
     update();
 }
 
@@ -68,11 +62,18 @@ void ImageWidget::wheelEvent(QWheelEvent *e) {
     if (e->angleDelta().y()<0) {
         if (qMin(this->width(), this->height()) >= 15) {
             this->setFixedSize(this->width()*0.95, this->height()*0.95);
+        } else {
+            //Todo: process the minsize
+            this->setFixedSize(15, 15);
+            return;
         }
     } else {
         if (qMin(this->width(), this->height()) >= 15) {
             this->setFixedSize(this->width()*1.05, this->height()*1.05);
-
+        } else {
+            //Todo: process the maxsize
+            this->setFixedSize(15, 15);
+            return;
         }
     }
 

@@ -34,6 +34,7 @@ private:
     QString m_imageUrl = "";
     //The main pixmap
     QPixmap m_pix;
+    QSize m_img_actual_size = QSize(0, 0);
     QHBoxLayout* m_hLayout;
     QVBoxLayout* m_Layout;
     //The main pixmap size
