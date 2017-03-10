@@ -39,6 +39,7 @@ void MainFrame::initData() {}
 void MainFrame::setSelectedImage(QString fileUrl) {
     m_url = fileUrl;
     m_imageWidget->setImage(m_url);
+    m_thumbnailWidget->setImage(m_url);
 }
 
 void MainFrame::resizeEvent(QResizeEvent *e) {

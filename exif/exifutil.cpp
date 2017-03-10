@@ -5,10 +5,10 @@ static void parse_tag(ExifData *d, ExifIfd ifd, ExifTag tag) {
     if (entry) {
         char buf[1024];
         /* Get the contents of the tag in human-readable form */
-        exif_entry_get_value(entry, buf, sizeof(buf));
-
         if (*buf) {
-            qDebug() << "exif info:" << exif_tag_get_name_in_ifd(tag, ifd);
+            exif_entry_get_value(entry, buf, sizeof(buf));
+            imgInfoMap.insert(exif_tag_get_name_in_ifd(tag, ifd),
+                              exif_entry_get_value(entry, buf, sizeof(buf)));
         }
     }
 }
@@ -31,16 +31,15 @@ static void show_mnote_tag(ExifData *d, unsigned tag) {
     }
 }
 
-QMap<QString, QString> *exif_image_url(const QString &imageUrl) {
+QMap<QString, QString> exif_image_url(const QString &imageUrl) {
     ExifData* ed;
 
 //    ExifEntry* entry;
     ed = exif_data_new_from_file(imageUrl.toUtf8().data());
-    qDebug() << "ed:" << ed;
     if (!ed) {
-        return NULL;
+        return QMap<QString, QString>();
     }
-
+    imgInfoMap.clear();
     parse_tag(ed, EXIF_IFD_0, EXIF_TAG_DATE_TIME);
     parse_tag(ed, EXIF_IFD_0, EXIF_TAG_DATE_TIME_DIGITIZED);
     parse_tag(ed, EXIF_IFD_0, EXIF_TAG_ARTIST);
@@ -62,5 +61,5 @@ QMap<QString, QString> *exif_image_url(const QString &imageUrl) {
     parse_tag(ed, EXIF_IFD_EXIF, EXIF_TAG_FLASH);
     parse_tag(ed, EXIF_IFD_EXIF, EXIF_TAG_APERTURE_VALUE);
     parse_tag(ed, EXIF_IFD_EXIF, EXIF_TAG_FOCAL_LENGTH);
-
+    return imgInfoMap;
 }

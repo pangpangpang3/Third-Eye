@@ -24,11 +24,8 @@ void ImageWidget::initConnect() {
 }
 
 void ImageWidget::paintEvent(QPaintEvent *) {
-
-    qDebug() << "m_pix paintEvent:" << m_pix.size();
     m_imageLabel->setMinimumSize(this->rect().size());
     m_imageLabel->sizeHint();
-    qDebug() << m_imageLabel->size();
     QPainter painter(this);
     if (m_pix.isNull()) {
         qWarning() << "Invalid format of pixmap!";
@@ -48,7 +45,7 @@ void ImageWidget::setImage(QString url) {
         return;
     m_imageUrl = url;
     m_pix.load(m_imageUrl);
-    exif_image_url(m_imageUrl);
+
     //TODO: process if the image size is too large to display on screen
     if (m_pix.width() <=0 || m_pix.height() <= 0)
         return;

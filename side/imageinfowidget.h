@@ -10,6 +10,7 @@ class ImageInfoWidget : public QFrame {
         ImageInfoWidget(QWidget* parent = 0);
         ~ImageInfoWidget();
 public slots:
+        void setImage(QString &path);
         void AddInfoPair(QString title, QString value);
 private:
     QGridLayout* m_Layout;
