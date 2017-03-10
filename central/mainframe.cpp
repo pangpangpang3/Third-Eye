@@ -19,9 +19,8 @@ void MainFrame::initUi(){
 
     m_imageArea->setWidget(m_imageWidget);
     m_imageArea->setAlignment(Qt::AlignCenter);
-    m_thumbnailWidget = new QListWidget(this);
-    m_thumbnailWidget->setStyleSheet("background-color: rgba(216, 191, 216, 255);");
-    m_thumbnailWidget->setFixedWidth(COMMONVIEW::RIGHT_SIZEBAR_WIDTH);
+    m_thumbnailWidget = new ImageInfoWidget(this);
+
 
     m_Layout = new QHBoxLayout(this);
     m_Layout->setContentsMargins(0, 0, 0, 0);

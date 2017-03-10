@@ -15,6 +15,8 @@
 
 #include "common/constants.h"
 #include "imagewidget.h"
+#include "side/imageinfowidget.h"
+
 // MainFrame is the widgets contains the image body,and sideWidget with thumbnails
 
 class MainFrame : public QFrame
@@ -41,7 +43,7 @@ private:
     QString m_url = "";
 
     //The right size image
-    QListWidget* m_thumbnailWidget;
+    ImageInfoWidget* m_thumbnailWidget;
     QPushButton* m_leftButton;
     QPushButton* m_rightButton;
     QHBoxLayout* m_Layout;

@@ -33,8 +33,6 @@ void MainWindow::createMenu() {
     QMenu* editMenu = menuBar()->addMenu(tr("Edit"));
     QAction* rotate = new QAction(tr("rotate"), this);
     editMenu->addAction(rotate);
-
-    this->menuBar()->setFixedHeight(30);
 }
 void MainWindow::addCentralWidget() {
     m_centralWidget = new MainFrame(this);
@@ -61,6 +59,7 @@ void MainWindow::openFile() {
                                                      tmpPath[0], COMMONVIEW::VALID_FORMAT);
     qDebug() << "selectedFileUrl" << selectedFile;
     QStringList tmpUrlList = selectedFile.toString().split("file://");
+    qDebug() << "tmpUrlList:" << tmpUrlList;
     m_centralWidget->setSelectedImage(tmpUrlList[1]);
 }
 

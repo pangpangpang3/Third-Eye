@@ -1,6 +1,8 @@
 #include <QDebug>
+#include <QFileInfo>
 
 #include "imagewidget.h"
+#include "exif/exifutil.h"
 
 const int IMAGE_MIN_WIDTH = 2;
 const int IMAGE_MIN_HEIGHT = 2;
@@ -8,14 +10,12 @@ const int IMAGE_MIN_HEIGHT = 2;
 ImageWidget::ImageWidget(QWidget *parent)
     : QWidget(parent)
 {
-
     initUI();
     initConnect();
 }
 
 void ImageWidget::initUI() {
     setFixedSize(640, 480);
-//    setStyleSheet("background-color: rgba(255, 0, 0, 100);");
     m_imageLabel = new QLabel(this);
 }
 
@@ -30,15 +30,15 @@ void ImageWidget::paintEvent(QPaintEvent *) {
     m_imageLabel->sizeHint();
     qDebug() << m_imageLabel->size();
     QPainter painter(this);
-
     if (m_pix.isNull()) {
         qWarning() << "Invalid format of pixmap!";
     } else {
-        QPixmap img = m_pix.scaled(rect().size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        QPixmap img = m_pix.scaled(rect().size(), Qt::KeepAspectRatio,
+                                   Qt::SmoothTransformation);
         m_img_actual_size = img.size();
-        painter.setRenderHints(QPainter::HighQualityAntialiasing|QPainter::SmoothPixmapTransform);
+        painter.setRenderHints(QPainter::HighQualityAntialiasing|
+                               QPainter::SmoothPixmapTransform);
         painter.drawPixmap(0, 0, width(), height(), img);
-
         update();
     }
 }
@@ -48,6 +48,7 @@ void ImageWidget::setImage(QString url) {
         return;
     m_imageUrl = url;
     m_pix.load(m_imageUrl);
+    exif_image_url(m_imageUrl);
     //TODO: process if the image size is too large to display on screen
     if (m_pix.width() <=0 || m_pix.height() <= 0)
         return;
@@ -86,5 +87,4 @@ void ImageWidget::resizeEvent(QResizeEvent *) {
     emit scaleSize(m_pix.size());
 }
 
-ImageWidget::~ImageWidget()
-{}
+ImageWidget::~ImageWidget() {}
